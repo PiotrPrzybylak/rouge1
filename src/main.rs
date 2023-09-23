@@ -1,4 +1,4 @@
-use std::mem::forget;
+
 
 fn main() {
     println!("Hello, world!");
