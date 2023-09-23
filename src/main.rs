@@ -18,7 +18,7 @@ fn main() {
         }
 
         let mut line = String::new();
-        std::io::stdin().read_line(&mut line).unwrap();
+        std::io::stdin().read_line(&mut line);
 
         match line.strip_suffix("\n").unwrap() {
             "w" => position_y-=1,
