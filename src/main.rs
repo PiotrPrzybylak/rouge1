@@ -11,7 +11,7 @@ struct Game {
 }
 
 impl Game {
-    fn draw(self) -> Vec<Vec<u32>> {
+    fn draw(self: &Self) -> Vec<Vec<u32>> {
         // let mut result = Vec::new();
         for i in 0..self.height {
             println!("{}", i);
@@ -26,7 +26,7 @@ fn main() {
     let mut player = Player{ x: 0, y: 0 };
     let mut game = Game{player: player, width: 20, height: 10};
     loop {
-        // game.draw();
+        game.draw();
         let mut state = [[0u8; 4]; 6];
         state[game.player.y][game.player.x] = 1;
 
