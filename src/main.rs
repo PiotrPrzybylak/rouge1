@@ -19,22 +19,14 @@ fn main() {
 
         let mut line = String::new();
         let b1 = std::io::stdin().read_line(&mut line).unwrap();
-        if line.contains("q") {
-            break;
-        }
 
-        if line.contains("a") {
-            position_x-=1;
-        }
-        if line.contains("d") {
-            position_x+=1;
-        }
-
-        if line.contains("w") {
-            position_y-=1;
-        }
-        if line.contains("s") {
-            position_y+=1;
+        match line.strip_suffix("\n").unwrap() {
+            "w" => position_y-=1,
+            "a" => position_x-=1,
+            "s" => position_y+=1,
+            "d" => position_x+=1,
+            "q" => break,
+            _ => println!("?????")
         }
 
     }
