@@ -1,10 +1,9 @@
 use rouge1::*;
+use rouge1::Direction::{East, North, South, West};
 
 fn main() {
-    println!("Hello, world!");
 
-    let mut player = Player{ x: 0, y: 0 };
-    let mut game = Game{player: player, width: 20, height: 10};
+    let mut game = Game::new(10, 20);
     loop {
         let mut state = game.draw();
 
@@ -18,14 +17,16 @@ fn main() {
         let mut line = String::new();
         let _ = std::io::stdin().read_line(&mut line);
 
-        match line.strip_suffix("\n").unwrap() {
-            "w" => game.player.y-=1,
-            "a" => game.player.x-=1,
-            "s" => game.player.y+=1,
-            "d" => game.player.x+=1,
+        let direction = match line.strip_suffix("\n").unwrap() {
+            "w" => (North),
+            "a" => (West),
+            "s" => (South),
+            "d" => (East),
             "q" => break,
-            _ => println!("?????")
-        }
+            _ => continue
+        };
+
+        game.movePlayer(direction);
 
     }
 
