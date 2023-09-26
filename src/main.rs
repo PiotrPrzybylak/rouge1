@@ -4,7 +4,7 @@ use rouge1::*;
 use rouge1::Direction::{East, North, South, West};
 
 fn main() {
-    let mut game = Game::new(10, 20);
+    let mut game = Game::new(50, 20);
     let getch = Getch::new();
     loop {
         clear_screen();
