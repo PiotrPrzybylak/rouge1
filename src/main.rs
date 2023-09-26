@@ -7,14 +7,9 @@ fn main() {
     let mut game = Game::new(10, 20);
     let getch = Getch::new();
     loop {
-        let mut state = game.draw();
-
-        for i in state {
-            for j in i {
-                print!("{}", j);
-            }
-            println!();
-        }
+        clear_screen();
+        let state = game.draw();
+        draw_screen(&state);
 
         let key = getch.getch().unwrap() as char;
         println!("{}", key);
@@ -28,5 +23,18 @@ fn main() {
         };
 
         game.movePlayer(direction);
+    }
+}
+
+fn clear_screen() {
+    print!("{esc}c", esc = 27 as char);
+}
+
+fn draw_screen(state: &Vec<Vec<u32>>) {
+    for i in state {
+        for j in i {
+            print!("{}", j);
+        }
+        println!();
     }
 }
