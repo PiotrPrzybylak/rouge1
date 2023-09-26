@@ -14,15 +14,15 @@ fn main() {
         let key = getch.getch().unwrap() as char;
         println!("{}", key);
         let direction = match key {
-            'w' => (North),
-            'a' => (West),
-            's' => (South),
-            'd' => (East),
+            'w' => North,
+            'a' => West,
+            's' => South,
+            'd' => East,
             'q' => break,
             _ => continue
         };
 
-        game.movePlayer(direction);
+        game.move_player(direction);
     }
 }
 
