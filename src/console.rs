@@ -5,6 +5,7 @@ pub fn clear_screen() {
 }
 
 pub fn draw_screen(state: &Vec<Vec<char>>) {
+    clear_screen();
     for i in state {
         for j in i {
             print!("{}", j);

@@ -9,7 +9,6 @@ fn main() {
 
     let mut game = Game::new(50, 20);
     loop {
-        console::clear_screen();
         let state = game.draw();
         console::draw_screen(&state);
 
