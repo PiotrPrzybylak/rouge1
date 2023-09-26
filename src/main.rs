@@ -8,15 +8,12 @@ mod console;
 fn main() {
 
     let mut game = Game::new(50, 20);
-    let getch = Getch::new();
     loop {
         console::clear_screen();
         let state = game.draw();
         console::draw_screen(&state);
 
-        let key = getch.getch().unwrap() as char;
-        println!("{}", key);
-        let direction = match key {
+        let direction = match console::read_key() {
             'w' => North,
             'a' => West,
             's' => South,
