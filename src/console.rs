@@ -1,19 +1,28 @@
 use getch::Getch;
 
-pub fn clear_screen() {
-    print!("{esc}c", esc = 27 as char);
+pub struct Console {
+    key_reader: Getch,
 }
 
-pub fn draw_screen(state: &Vec<Vec<char>>) {
-    clear_screen();
-    for i in state {
-        for j in i {
-            print!("{}", j);
+impl Console {
+    pub fn new() -> Console { Console { key_reader: Getch::new() } }
+
+    pub fn clear_screen(self: &Self) {
+        print!("{esc}c", esc = 27 as char);
+    }
+
+    pub fn draw_screen(self: &Self, state: &Vec<Vec<char>>) {
+        self.clear_screen();
+        for i in state {
+            for j in i {
+                print!("{}", j);
+            }
+            println!();
         }
-        println!();
+    }
+
+    pub fn read_key(self: &Self) -> char {
+        self.key_reader.getch().unwrap() as char
     }
 }
 
-pub fn read_key() -> char {
-    Getch::new().getch().unwrap() as char
-}
