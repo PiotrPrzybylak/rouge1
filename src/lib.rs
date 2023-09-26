@@ -11,12 +11,12 @@ pub struct Game {
 
 impl Game {
     pub fn new(width: usize, height: usize) -> Game { Game { player: Player { x: 0, y: 0 }, width, height } }
-    pub fn draw(self: &Self) -> Vec<Vec<u32>> {
+    pub fn draw(self: &Self) -> Vec<Vec<char>> {
         let mut result = Vec::new();
         for _ in 0..self.height {
-            result.push(vec![0; self.width]);
+            result.push(vec!['.'; self.width]);
         }
-        result[self.player.y][self.player.x] = 1;
+        result[self.player.y][self.player.x] = '@';
         return result;
     }
 
