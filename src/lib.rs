@@ -3,15 +3,23 @@ struct Player {
     pub y: usize,
 }
 
-pub struct Game {
+pub trait Game {
+    fn draw(self: &Self) -> Vec<Vec<char>>;
+    fn move_player(self: &mut Self, direction: Direction);
+}
+
+pub struct MutableGame {
     player: Player,
     width: usize,
     height: usize,
 }
 
-impl Game {
-    pub fn new(width: usize, height: usize) -> Game { Game { player: Player { x: 0, y: 0 }, width, height } }
-    pub fn draw(self: &Self) -> Vec<Vec<char>> {
+impl MutableGame {
+    pub fn new(width: usize, height: usize) -> MutableGame { MutableGame { player: Player { x: 0, y: 0 }, width, height } }
+
+}
+impl Game for MutableGame {
+    fn draw(self: &Self) -> Vec<Vec<char>> {
         let mut result = Vec::new();
         for _ in 0..self.height {
             result.push(vec!['.'; self.width]);
@@ -20,7 +28,7 @@ impl Game {
         return result;
     }
 
-    pub fn move_player(self: &mut Self, direction: Direction) {
+    fn move_player(self: &mut Self, direction: Direction) {
         match direction {
             Direction::North => if self.player.y > 0 { self.player.y -= 1 },
             Direction::West => if self.player.x > 0 { self.player.x -= 1 },
