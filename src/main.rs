@@ -1,9 +1,11 @@
+use getch::Getch;
+
 use rouge1::*;
 use rouge1::Direction::{East, North, South, West};
 
 fn main() {
-
     let mut game = Game::new(10, 20);
+    let getch = Getch::new();
     loop {
         let mut state = game.draw();
 
@@ -14,20 +16,17 @@ fn main() {
             println!();
         }
 
-        let mut line = String::new();
-        let _ = std::io::stdin().read_line(&mut line);
-
-        let direction = match line.strip_suffix("\n").unwrap() {
-            "w" => (North),
-            "a" => (West),
-            "s" => (South),
-            "d" => (East),
-            "q" => break,
+        let key = getch.getch().unwrap() as char;
+        println!("{}", key);
+        let direction = match key {
+            'w' => (North),
+            'a' => (West),
+            's' => (South),
+            'd' => (East),
+            'q' => break,
             _ => continue
         };
 
         game.movePlayer(direction);
-
     }
-
 }
