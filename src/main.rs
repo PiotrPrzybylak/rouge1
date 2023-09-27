@@ -6,7 +6,7 @@ use crate::console::Console;
 mod console;
 
 fn main() {
-    let mut game = ImmutableGame::new(50, 20);
+    let mut game = MutableGame::new(50, 20);
     let console = Console::new();
     loop {
         let state = game.draw();

@@ -21,33 +21,33 @@ pub struct ImmutableGame {
 }
 
 impl MutableGame {
-    pub fn new(width: usize, height: usize) -> MutableGame { MutableGame { player: Player { x: 0, y: 0 }, width, height } }
+    pub fn new(width: usize, height: usize) -> Box<dyn Game> { Box::new(MutableGame { player: Player { x: 0, y: 0 }, width, height }) }
 }
 
 impl ImmutableGame {
-    pub fn new(width: usize, height: usize) -> Box<dyn Game> {Box::new(ImmutableGame { player: Player { x: 0, y: 0 }, width, height }) }
+    pub fn new(width: usize, height: usize) -> Box<dyn Game> { Box::new(ImmutableGame { player: Player { x: 0, y: 0 }, width, height }) }
 }
 
-// impl Game for MutableGame {
-//     fn draw(self: &Self) -> Vec<Vec<char>> {
-//         let mut result = Vec::new();
-//         for _ in 0..self.height {
-//             result.push(vec!['.'; self.width]);
-//         }
-//         result[self.player.y][self.player.x] = '@';
-//         return result;
-//     }
-//
-//     fn move_player(self: &mut Self, direction: Direction) -> Box<dyn Game> {
-//         match direction {
-//             Direction::North => if self.player.y > 0 { self.player.y -= 1 },
-//             Direction::West => if self.player.x > 0 { self.player.x -= 1 },
-//             Direction::South => if self.player.y < self.height - 1 { self.player.y += 1 },
-//             Direction::East => if self.player.x < self.width - 1 { self.player.x += 1 },
-//         }
-//         Box::new(self)
-//     }
-// }
+impl Game for MutableGame {
+    fn draw(self: &Self) -> Vec<Vec<char>> {
+        let mut result = Vec::new();
+        for _ in 0..self.height {
+            result.push(vec!['.'; self.width]);
+        }
+        result[self.player.y][self.player.x] = '@';
+        return result;
+    }
+
+    fn move_player(mut self: Box<Self>, direction: Direction) -> Box<dyn Game> {
+        match direction {
+            Direction::North => if self.player.y > 0 { self.player.y -= 1 },
+            Direction::West => if self.player.x > 0 { self.player.x -= 1 },
+            Direction::South => if self.player.y < self.height - 1 { self.player.y += 1 },
+            Direction::East => if self.player.x < self.width - 1 { self.player.x += 1 },
+        }
+        self
+    }
+}
 
 impl Game for ImmutableGame {
     fn draw(self: &Self) -> Vec<Vec<char>> {
