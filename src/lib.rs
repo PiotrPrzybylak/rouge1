@@ -5,7 +5,7 @@ struct Player {
 
 pub trait Game {
     fn draw(self: &Self) -> Vec<Vec<char>>;
-    fn move_player(self: &Self, direction: Direction) -> Box<dyn Game>;
+    fn move_player(self: Box<Self>, direction: Direction) -> Box<dyn Game>;
 }
 
 pub struct MutableGame {
@@ -25,7 +25,7 @@ impl MutableGame {
 }
 
 impl ImmutableGame {
-    pub fn new(width: usize, height: usize) -> impl Game { ImmutableGame { player: Player { x: 0, y: 0 }, width, height } }
+    pub fn new(width: usize, height: usize) -> Box<dyn Game> {Box::new(ImmutableGame { player: Player { x: 0, y: 0 }, width, height }) }
 }
 
 // impl Game for MutableGame {
@@ -59,7 +59,7 @@ impl Game for ImmutableGame {
         return result;
     }
 
-    fn move_player(self: &Self, direction: Direction) -> Box<dyn Game> {
+    fn move_player(self: Box<Self>, direction: Direction) -> Box<dyn Game> {
         let mut dx: i32 = 0;
         let mut dy: i32 = 0;
         match direction {
