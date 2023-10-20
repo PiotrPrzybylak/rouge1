@@ -1,6 +1,6 @@
 struct Player {
-    pub x: usize,
-    pub y: usize,
+    x: usize,
+    y: usize,
 }
 
 pub trait Game {
@@ -12,6 +12,12 @@ pub struct MutableGame {
     player: Player,
     width: usize,
     height: usize,
+    enemies: Vec<Enemy>,
+}
+
+struct Enemy {
+    x: usize,
+    y: usize,
 }
 
 pub struct ImmutableGame {
@@ -21,7 +27,10 @@ pub struct ImmutableGame {
 }
 
 impl MutableGame {
-    pub fn new(width: usize, height: usize) -> Box<dyn Game> { Box::new(MutableGame { player: Player { x: 0, y: 0 }, width, height }) }
+    pub fn new(width: usize, height: usize) -> Box<dyn Game> { Box::new(MutableGame { player: Player { x: 0, y: 0 }, width, height, enemies: vec![Enemy{x:1, y:0}]}) }
+    fn move_enemies(&mut self) {
+
+    }
 }
 
 impl ImmutableGame {
@@ -35,6 +44,9 @@ impl Game for MutableGame {
             result.push(vec!['.'; self.width]);
         }
         result[self.player.y][self.player.x] = '@';
+        for enemy in self.enemies.iter() {
+            result[enemy.y][enemy.x] = 'X';
+        }
         return result;
     }
 
@@ -45,6 +57,7 @@ impl Game for MutableGame {
             Direction::South => if self.player.y < self.height - 1 { self.player.y += 1 },
             Direction::East => if self.player.x < self.width - 1 { self.player.x += 1 },
         }
+        self.move_enemies();
         self
     }
 }
