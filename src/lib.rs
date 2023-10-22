@@ -1,3 +1,5 @@
+use rand::random;
+
 struct Player {
     x: usize,
     y: usize,
@@ -30,7 +32,16 @@ impl MutableGame {
     pub fn new(width: usize, height: usize) -> Box<dyn Game> { Box::new(MutableGame { player: Player { x: 0, y: 0 }, width, height, enemies: vec![Enemy{x:1, y:0}]}) }
     fn move_enemies(&mut self) {
         for enemy in &mut self.enemies.iter_mut() {
-            enemy.x += 1;
+            let rnd : usize = random();
+            let rnd = rnd % 4;
+            static DIRECTIONS: [Direction; 4] = [Direction::North, Direction::South, Direction::East, Direction::West];
+            let direction = &DIRECTIONS[rnd];
+            match direction {
+                Direction::North => if enemy.y > 0 { enemy.y -= 1 },
+                Direction::West => if enemy.x > 0 { enemy.x -= 1 },
+                Direction::South => if enemy.y < self.height - 1 { enemy.y += 1 },
+                Direction::East => if enemy.x < self.width - 1 { enemy.x += 1 },
+            }
         }
     }
 }
