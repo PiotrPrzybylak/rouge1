@@ -29,7 +29,7 @@ pub struct ImmutableGame {
 }
 
 impl MutableGame {
-    pub fn new(width: usize, height: usize) -> Box<dyn Game> { Box::new(MutableGame { player: Player { x: 0, y: 0 }, width, height, enemies: vec![Enemy{x:1, y:0}]}) }
+    pub fn new(width: usize, height: usize) -> Box<dyn Game> { Box::new(MutableGame { player: Player { x: 0, y: 0 }, width, height, enemies: vec![Enemy{x:1, y:0},Enemy{x:2, y:0}, Enemy{x:3, y:0}]}) }
     fn move_enemies(&mut self) {
         for enemy in &mut self.enemies.iter_mut() {
             let rnd : usize = random();
