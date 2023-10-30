@@ -1,4 +1,4 @@
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 use rouge1::*;
@@ -9,8 +9,7 @@ use crate::console::Console;
 mod console;
 
 fn main() {
-    let mut game = MutableGame::new(50, 20);
-    let mutex = Mutex::new(game);
+    let game = Arc::new(Mutex::new(Wrapper {game: Option::Some( MutableGame::new2(50, 20))}));
     let console = Console::new();
     thread::spawn(|| {
         loop {
@@ -19,10 +18,10 @@ fn main() {
         }
     });
     loop {
-        let mut game1 = mutex.lock().unwrap();
-        let mut g2 = game1.as_mut();
-        let state = game1.draw();
-        console.draw_screen(&state);
+        let mut game1 = game.lock().unwrap();
+        // let mut g2 = game1.as_mut();
+        let state = game1.game.as_ref().unwrap().draw();
+        console.draw_screen( &state);
 
         let direction = match console.read_key() {
             'w' => North,
@@ -33,7 +32,15 @@ fn main() {
             _ => continue
         };
 
-        g2.move_player(direction);
+
+        // game1.game = None;
+        let a = game1.game.take().unwrap();
+        // let option = Some(MutableGame::new2(50, 20).move_player2(direction));
+        // game1.game = option;
+        game1.game = Some(a.move_player2(direction));
+        // let g123 = game1.game.take().unwrap();
+        // game1.game = Some(g123.move_player2(direction));
+
     }
 }
 
