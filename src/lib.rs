@@ -124,7 +124,3 @@ pub enum Direction {
     South,
     East,
 }
-
-pub struct Wrapper {
-    pub game : Option<Box<MutableGame>>
-}
