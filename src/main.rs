@@ -15,13 +15,11 @@ fn main() {
         let console = Console::new();
         loop {
             thread::sleep(Duration::from_millis(100));
-            let mut game = game_mutex2.lock().unwrap();
-            let state = game.as_ref().unwrap().draw();
+            let game = game_mutex2.lock().unwrap().take().unwrap();
+            let state = game.draw();
             console.draw_screen( &state);
-            let new_game = game.take().unwrap().move_game();
-            game.replace(new_game);
-
-
+            let new_game = game.move_game();
+            game_mutex2.lock().unwrap().replace(new_game);
         }
     });
     let console = Console::new();
