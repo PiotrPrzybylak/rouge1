@@ -61,6 +61,12 @@ impl MutableGame {
         }
         Box::new(MutableGame { player: Player { x: (self.player.x as i32 + dx) as usize, y: (self.player.y as i32 + dy) as usize }, width: self.width, height: self.height, enemies: self.enemies })
     }
+
+
+    pub fn move_game(mut self: Box<Self>) -> Box<Self> {
+        self.move_enemies();
+        self
+    }
 }
 
 impl ImmutableGame {

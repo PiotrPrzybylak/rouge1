@@ -9,20 +9,23 @@ use crate::console::Console;
 mod console;
 
 fn main() {
-    let game = Arc::new(Mutex::new(Option::Some( MutableGame::new2(50, 20))));
-    let console = Console::new();
-    thread::spawn(|| {
+    let game_mutex1 = Arc::new(Mutex::new(Option::Some( MutableGame::new2(50, 20))));
+    let game_mutex2 = game_mutex1.clone();
+    thread::spawn(move || {
+        let console = Console::new();
         loop {
             thread::sleep(Duration::from_millis(100));
-            // game.move_player(South);
+            let mut game = game_mutex2.lock().unwrap();
+            let state = game.as_ref().unwrap().draw();
+            console.draw_screen( &state);
+            let new_game = game.take().unwrap().move_game();
+            game.replace(new_game);
+
+
         }
     });
+    let console = Console::new();
     loop {
-        let mut game1 = game.lock().unwrap();
-        // let mut g2 = game1.as_mut();
-        let state = game1.as_ref().unwrap().draw();
-        console.draw_screen( &state);
-
         let direction = match console.read_key() {
             'w' => North,
             'a' => West,
@@ -32,14 +35,11 @@ fn main() {
             _ => continue
         };
 
-
-        // game1.game = None;
-        let a = game1.take().unwrap();
-        // let option = Some(MutableGame::new2(50, 20).move_player2(direction));
-        // game1.game = option;
-        game1.replace(a.move_player2(direction));
-        // let g123 = game1.game.take().unwrap();
-        // game1.game = Some(g123.move_player2(direction));
+        let mut game = game_mutex1.lock().unwrap();
+        let state = game.as_ref().unwrap().draw();
+        console.draw_screen( &state);
+        let new_game = game.take().unwrap().move_player2(direction);
+        game.replace(new_game);
 
     }
 }
