@@ -5,9 +5,12 @@ struct Player {
     y: usize,
 }
 
-pub trait Game {
+pub trait Game: Send {
     fn draw(self: &Self) -> Vec<Vec<char>>;
+
     fn move_player(self: Box<Self>, direction: Direction) -> Box<dyn Game>;
+
+    fn move_game(self: Box<Self>) -> Box<dyn Game>;
 }
 
 pub struct MutableGame {
@@ -29,14 +32,11 @@ pub struct ImmutableGame {
 }
 
 impl MutableGame {
-    pub fn new(width: usize, height: usize) -> Box<dyn Game> { Box::new(MutableGame { player: Player { x: 0, y: 0 }, width, height, enemies: vec![Enemy{x:1, y:0},Enemy{x:2, y:0}, Enemy{x:3, y:0}]}) }
-
-    pub fn new2(width: usize, height: usize) -> Box<MutableGame> { Box::new(MutableGame { player: Player { x: 0, y: 0 }, width, height, enemies: vec![Enemy{x:1, y:0},Enemy{x:2, y:0}, Enemy{x:3, y:0}]}) }
-
+    pub fn new(width: usize, height: usize) -> Box<dyn Game> { Box::new(MutableGame { player: Player { x: 0, y: 0 }, width, height, enemies: vec![Enemy { x: 1, y: 0 }, Enemy { x: 2, y: 0 }, Enemy { x: 3, y: 0 }] })}
 
     fn move_enemies(&mut self) {
         for enemy in &mut self.enemies.iter_mut() {
-            let rnd : usize = random();
+            let rnd: usize = random();
             let rnd = rnd % 4;
             static DIRECTIONS: [Direction; 4] = [Direction::North, Direction::South, Direction::East, Direction::West];
             let direction = &DIRECTIONS[rnd];
@@ -47,25 +47,6 @@ impl MutableGame {
                 Direction::East => if enemy.x < self.width - 1 { enemy.x += 1 },
             }
         }
-    }
-
-
-   pub fn move_player2(self: Box<Self>, direction: Direction) -> Box<MutableGame> {
-        let mut dx: i32 = 0;
-        let mut dy: i32 = 0;
-        match direction {
-            Direction::North => if self.player.y > 0 { dy = -1 },
-            Direction::West => if self.player.x > 0 { dx = -1 },
-            Direction::South => if self.player.y < self.height - 1 { dy = 1 },
-            Direction::East => if self.player.x < self.width - 1 { dx = 1 },
-        }
-        Box::new(MutableGame { player: Player { x: (self.player.x as i32 + dx) as usize, y: (self.player.y as i32 + dy) as usize }, width: self.width, height: self.height, enemies: self.enemies })
-    }
-
-
-    pub fn move_game(mut self: Box<Self>) -> Box<Self> {
-        self.move_enemies();
-        self
     }
 }
 
@@ -96,6 +77,11 @@ impl Game for MutableGame {
         self.move_enemies();
         self
     }
+
+    fn move_game(mut self: Box<Self>) -> Box<dyn Game> {
+        self.move_enemies();
+        self
+    }
 }
 
 impl Game for ImmutableGame {
@@ -120,7 +106,10 @@ impl Game for ImmutableGame {
         Box::new(ImmutableGame { player: Player { x: (self.player.x as i32 + dx) as usize, y: (self.player.y as i32 + dy) as usize }, width: self.width, height: self.height })
     }
 
-
+    fn move_game(mut self: Box<Self>) -> Box<dyn Game> {
+        // self.move_enemies();
+        self
+    }
 }
 
 

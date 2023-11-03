@@ -9,7 +9,7 @@ use crate::console::Console;
 mod console;
 
 fn main() {
-    let game_mutex1 = Arc::new(Mutex::new(Option::Some( MutableGame::new2(50, 20))));
+    let game_mutex1 = Arc::new(Mutex::new(Option::Some( MutableGame::new(50, 20))));
     let game_mutex2 = game_mutex1.clone();
     thread::spawn(move || {
         let console = Console::new();
@@ -37,7 +37,7 @@ fn main() {
         let mut game = game_mutex1.lock().unwrap();
         let state = game.as_ref().unwrap().draw();
         console.draw_screen( &state);
-        let new_game = game.take().unwrap().move_player2(direction);
+        let new_game = game.take().unwrap().move_player(direction);
         game.replace(new_game);
 
     }
