@@ -106,7 +106,7 @@ impl Game for ImmutableGame {
         Box::new(ImmutableGame { player: Player { x: (self.player.x as i32 + dx) as usize, y: (self.player.y as i32 + dy) as usize }, width: self.width, height: self.height })
     }
 
-    fn move_game(mut self: Box<Self>) -> Box<dyn Game> {
+    fn move_game(self: Box<Self>) -> Box<dyn Game> {
         // self.move_enemies();
         self
     }
